@@ -1,0 +1,305 @@
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Recipe Book</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment
+      [value]="activeTab"
+      (ionChange)="changeTab($any($event).detail.value)">
+
+      <ion-segment-button value="recipes">
+        <ion-label>Recipes</ion-label>
+        <ion-icon name="book-outline"></ion-icon>
+      </ion-segment-button>
+
+      <ion-segment-button value="ingredients">
+        <ion-label>Ingredients</ion-label>
+        <ion-icon name="leaf-outline"></ion-icon>
+      </ion-segment-button>
+
+      <ion-segment-button value="add">
+        <ion-label>Add Recipe</ion-label>
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-segment-button>
+
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- RECIPES TAB -->
+  <div *ngIf="activeTab === 'recipes'">
+
+    <h2>My Recipes</h2>
+
+    <ion-button
+      expand="block"
+      (click)="changeTab('add')">
+      + Create Recipe
+    </ion-button>
+
+    <ion-card *ngFor="let recipe of recipes">
+
+      <ion-card-header>
+        <ion-card-title>
+          {{ recipe.dishname }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <h3>Ingredients</h3>
+
+        <ion-list>
+          <ion-item
+            *ngFor="let item of recipe.ingredients">
+
+            {{ item.ingredientname }}
+
+            <ion-note slot="end">
+              {{ item.quantity }} {{ item.unit }}
+            </ion-note>
+
+          </ion-item>
+        </ion-list>
+
+        <h3>Instructions</h3>
+
+        <ion-list>
+          <ion-item
+            *ngFor="let step of recipe.instructions">
+
+            <ion-label class="ion-text-wrap">
+              <strong>Step {{ step.stepnumber }}</strong>
+              <p>{{ step.instruction }}</p>
+            </ion-label>
+
+          </ion-item>
+        </ion-list>
+
+      </ion-card-content>
+    </ion-card>
+
+    <ion-text
+      color="medium"
+      *ngIf="recipes.length === 0">
+
+      <p>No recipes available yet.</p>
+
+    </ion-text>
+
+  </div>
+
+
+  <!-- INGREDIENT MANAGEMENT TAB -->
+  <div *ngIf="activeTab === 'ingredients'">
+
+    <h2>Ingredient Management</h2>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Add New Ingredient</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-input
+          label="Ingredient Name"
+          labelPlacement="floating"
+          [(ngModel)]="newIngredient"
+          placeholder="Example: Ginger">
+        </ion-input>
+
+        <ion-button
+          expand="block"
+          (click)="addNewIngredient()">
+
+          Add Ingredient
+
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+    <h3>Available Ingredients</h3>
+
+    <ion-list>
+      <ion-item *ngFor="let item of availableIngredients">
+        <ion-icon
+          name="leaf-outline"
+          slot="start"
+          color="success">
+        </ion-icon>
+
+        {{ item.ingredientname }}
+      </ion-item>
+    </ion-list>
+
+  </div>
+
+
+  <!-- ADD RECIPE TAB -->
+  <div *ngIf="activeTab === 'add'">
+
+    <h2>Create New Recipe</h2>
+
+    <!-- Dish Name -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Dish Information</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-input
+          label="Dish Name"
+          labelPlacement="floating"
+          [(ngModel)]="dishname"
+          placeholder="Enter dish name">
+        </ion-input>
+      </ion-card-content>
+    </ion-card>
+
+
+    <!-- Ingredients -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Ingredients</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <div
+          *ngFor="let item of selectedIngredients; let i = index"
+          class="entry">
+
+          <h3>Ingredient {{ i + 1 }}</h3>
+
+          <ion-item>
+            <ion-select
+              label="Select Ingredient"
+              [(ngModel)]="item.ingredientid"
+              placeholder="Choose ingredient">
+
+              <ion-select-option
+                *ngFor="let ingredient of availableIngredients"
+                [value]="ingredient.ingredientid">
+
+                {{ ingredient.ingredientname }}
+
+              </ion-select-option>
+
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-input
+              type="number"
+              label="Quantity"
+              [(ngModel)]="item.quantity">
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-select
+              label="Measurement Unit"
+              [(ngModel)]="item.unit">
+
+              <ion-select-option value="grams">Grams</ion-select-option>
+              <ion-select-option value="kg">Kilograms</ion-select-option>
+              <ion-select-option value="ml">Milliliters</ion-select-option>
+              <ion-select-option value="liters">Liters</ion-select-option>
+              <ion-select-option value="cups">Cups</ion-select-option>
+              <ion-select-option value="tbsp">Tablespoons</ion-select-option>
+              <ion-select-option value="tsp">Teaspoons</ion-select-option>
+              <ion-select-option value="pieces">Pieces</ion-select-option>
+
+            </ion-select>
+          </ion-item>
+
+          <ion-button
+            color="danger"
+            fill="clear"
+            (click)="removeIngredient(i)">
+
+            Remove
+
+          </ion-button>
+
+        </div>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="addIngredient()">
+
+          + Add Ingredient
+
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+
+    <!-- Instructions -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Cooking Instructions</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <div
+          *ngFor="let step of instructions; let i = index"
+          class="entry">
+
+          <ion-item>
+            <ion-textarea
+              label="Step {{ i + 1 }}"
+              labelPlacement="floating"
+              [(ngModel)]="instructions[i]"
+              placeholder="Enter cooking instructions">
+            </ion-textarea>
+          </ion-item>
+
+          <ion-button
+            color="danger"
+            fill="clear"
+            (click)="removeInstruction(i)">
+
+            Remove Step
+
+          </ion-button>
+
+        </div>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="addInstruction()">
+
+          + Add Instruction
+
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+
+    <!-- Save Recipe -->
+    <ion-button
+      expand="block"
+      color="success"
+      (click)="saveRecipe()">
+
+      <ion-icon name="save-outline" slot="start"></ion-icon>
+
+      Save Recipe
+
+    </ion-button>
+
+  </div>
+
+</ion-content>

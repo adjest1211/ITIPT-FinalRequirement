@@ -1,0 +1,44 @@
+
+ion-content {
+  --background: #f7f8fa;
+}
+
+h2 {
+  font-size: 23px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+ion-card {
+  border-radius: 14px;
+  margin: 14px 0;
+}
+
+ion-card-title {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+ion-button {
+  margin-top: 12px;
+  --border-radius: 10px;
+}
+
+.entry {
+  padding: 10px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+ion-textarea {
+  min-height: 75px;
+}
+
+ion-segment {
+  --background: white;
+}
